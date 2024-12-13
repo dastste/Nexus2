@@ -1,0 +1,33 @@
+name: Install Protoc
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch (or choose your preferred branch)
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  install-protoc:
+    runs-on: ubuntu-latest  # You can choose the OS you prefer, e.g., ubuntu-latest, macos-latest, etc.
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install protoc (Protocol Buffers)
+      run: |
+        # Install required dependencies
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+
+        # Download and install the latest version of protoc
+        PROTOC_VERSION="21.7"  # Set the desired version (replace with the latest available version)
+        wget https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip
+        unzip protoc-${PROTOC_VERSION}-linux-x86_64.zip -d protoc3
+        sudo mv protoc3/bin/protoc /usr/local/bin/
+        sudo mv protoc3/include/* /usr/local/include/
+        
+    - name: Verify protoc installation
+      run: protoc --version  # Check if protoc is installed successfully
